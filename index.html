@@ -437,7 +437,38 @@ const TEMPLATES = {
   running:  {label:'Running Support',    time:'30–40 min',icon:'🏃',clusters:['C3','B2'],coreBlocks:['Single-leg balance — 3 × 20s each','Anti-rotation trunk — 3 × 15s'],finisher:'Ankle eversion/inversion 2 × 12 each',warmup:'Light jump rope 2 min',coachNote:'Hip stability, glute activation, and posture.'},
 };
 
-const SYSTEM_PROMPT = `You are Scott's Bowflex Blaze workout coach. His profile: adaptive athletic generalist, ~25 miles/week running, avoids floor exercises/situps/excessive transitions. Structure: clusters x 10 min each, 2 alternating exercises per cluster (SAME setup within cluster), core blocks between clusters, optional finisher. Priority exercises: seated-lat-rows, rear-deltoid-rows, pulldowns, reverse-fly, scapular-retraction, trunk-rotation, resisted-punch, squat, leg-press, hip-ext-stabilized, hip-abduction, prone-leg-curl, bench-press, rc-internal, rc-external. Available cluster IDs: A1,A2,A3,A4,A5,B1,B2,B3,B4,B5,C1,C2,C3,C4,C5,D1,D2,D3,E1,E2,E3. Respond ONLY with JSON: {"sessionName":"string","mode":"efficient|recovery|performance|posture|minimal|running","clusters":["A1","B1"],"coreBlocks":["block 1","block 2"],"finisher":"string or null","warmup":"string","coachNote":"1-2 sentence rationale"}`;
+const SYSTEM_PROMPT = `You are Scott's Bowflex Blaze workout coach. His profile:
+
+IDENTITY: Adaptive athletic generalist. ~25 miles/week running. NOT bodybuilding. Blend strength, posture, anti-rotation core, movement quality, athletic longevity.
+
+AVOID: Floor exercises, situps, excessive setup transitions.
+
+STRUCTURE: Each session = clusters x 10 min. Each cluster = 2 exercises alternating with SAME Bowflex setup. Core blocks between clusters. Optional finisher.
+
+VARIETY IS CRITICAL — follow these rules strictly:
+- Rotate across ALL cluster types every session: A (push/pull), B (posture/scapular), C (running/lower), D (rotational), E (recovery)
+- Never default to the same 2-3 clusters. Spread across all 21 available clusters.
+- Strength goal: include at least one B or D cluster alongside A clusters
+- Recovery goal: use E clusters but vary which ones (E1, E2, E3 in rotation)
+- Actively use under-utilized clusters: A4, A5, B3, B5, C2, C5, D2, D3, E2, E3
+- Every 3rd-4th session should emphasize lower body C clusters regardless of stated goal
+- Shoulder integrity (B3: RC Internal + External) should appear every 3-4 sessions
+- Rotational clusters (D1, D2, D3) should appear at least every other session
+- The coachNote must explain which clusters were chosen AND why they provide variety
+
+FULL CLUSTER MENU — rotate broadly:
+A1=Row+Press, A2=RearDelt+Punch, A3=Pulldowns+ShoulderPress, A4=Rows+BicepsCurl, A5=NarrowPulls+Triceps
+B1=ReverseFly+Retraction, B2=ShoulderExt+RearDelt, B3=RCInternal+RCExternal, B4=ReverseFly+ShoulderExt, B5=StiffArm+LateralRaise
+C1=Squat+HipExtension, C2=LegPress+LegCurl, C3=HipAbduction+Kickback, C4=HipExt+HipAbduction, C5=LegPress+HipExt
+D1=TrunkRotation+Punch, D2=TrunkRotation+RearDelt, D3=ObliqueCrunch+TrunkRotation
+E1=Rows+ReverseFly, E2=ShoulderExt+Retraction, E3=LowBack+RearDelt
+
+RUNNING INTEGRATION: Heavy/wrecked legs = reduce C clusters, emphasize upper + posture. Fresh legs = include C clusters.
+
+CORE BLOCKS: Anti-rotation holds, standing oblique work, trunk rotation. No floor situps.
+
+Respond ONLY with JSON, no extra text:
+{"sessionName":"string","mode":"efficient|recovery|performance|posture|minimal|running","clusters":["A2","D1","C3"],"coreBlocks":["core block 1","core block 2"],"finisher":"string or null","warmup":"string","coachNote":"explain cluster choices and variety rationale"}\`;
 
 // ── STATE ──
 let ctx = {legs:'fresh', energy:'good', time:'45', goal:'efficient'};
@@ -535,8 +566,16 @@ async function generateAI() {
   const btn = document.getElementById('gen-btn');
   const errEl = document.getElementById('ai-error');
   btn.disabled = true; btn.textContent = 'Generating…'; errEl.textContent = '';
+  // Include recent cluster history so AI avoids repeating them
+  const recentClusters = history.slice(0, 4).map(h =>
+    (h.clusters || []).join(', ')
+  ).filter(Boolean);
+  const historyNote = recentClusters.length
+    ? ' Recent sessions used these clusters (avoid repeating): ' + recentClusters.join(' | ')
+    : '';
+
   const msg = (document.getElementById('ai-prompt').value || '').trim() ||
-    `Generate a ${ctx.time}-minute Bowflex workout. Legs: ${ctx.legs}. Energy: ${ctx.energy}. Goal: ${ctx.goal}.`;
+    `Generate a ${ctx.time}-minute Bowflex workout. Legs: ${ctx.legs}. Energy: ${ctx.energy}. Goal: ${ctx.goal}.${historyNote}`;
   try {
     const res = await fetch('https://blaze-proxy.orange-wildflower-5ab9.workers.dev', {
       method: 'POST',
