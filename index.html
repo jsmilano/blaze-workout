@@ -539,7 +539,7 @@ async function generateAI() {
   const msg = (document.getElementById('ai-prompt').value || '').trim() ||
     `Generate a ${ctx.time}-minute Bowflex workout. Legs: ${ctx.legs}. Energy: ${ctx.energy}. Goal: ${ctx.goal}.`;
   try {
-    const res = await fetch('https://blaze-api.orange-wildflower-5ab9.workers.dev', {
+    const res = await fetch('https://blaze-proxy.orange-wildflower-5ab9.workers.dev', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
