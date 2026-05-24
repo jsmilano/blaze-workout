@@ -886,9 +886,14 @@ function toggleTimer() { timerRunning = !timerRunning; }
 function dismissTimer() { clearInterval(timerInterval); timerSeconds=0; timerRunning=false; document.getElementById('timer-overlay').classList.remove('active'); }
 
 // ── INIT ──
-loadHistory();
-initQuickPrompts();
-initTemplates();
+// Use setTimeout to yield to browser paint before running init
+// This ensures the DOM is ready and prevents parse timeout on large files
+window.addEventListener('load', function() {
+  loadHistory();
+  initQuickPrompts();
+  initTemplates();
+});
 </script>
+
 </body>
 </html>
