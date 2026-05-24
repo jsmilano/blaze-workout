@@ -333,7 +333,6 @@ const IMGS={"chest-fly":["data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
 
 // ── API KEY — replace with your Anthropic key ──
 
-
 // ── EXERCISE DATABASE ──
 const EX = {
   'seated-lat-rows':     {n:'Seated Lat Rows',           g:'back',     pulley:'Chest Bar',    bench:'Horizontal',    tags:['pull','posture','compound']},
@@ -543,9 +542,7 @@ async function generateAI() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_KEY,
         'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
       },
       body: JSON.stringify({
         model: 'claude-haiku-4-5',
@@ -586,7 +583,7 @@ function buildExCard(exId, i) {
       + '<div class="ex-card-img"><img src="' + imgs[1] + '" loading="lazy" alt=""><span class="ex-card-lbl f">Finish</span></div>'
       + '</div>';
   }
-  return '<div class="ex-card" style="border-left:2px solid ' + color + '" onclick="openModal('' + exId + '')">'
+  return '<div class="ex-card" style="border-left:2px solid ' + color + '" data-modal="' + exId + '">'
     + '<div class="ex-card-top">'
     + '<div class="ex-letter">' + letter + '</div>'
     + '<div style="flex:1;min-width:0"><div class="ex-name">' + ex.n + '</div><div class="ex-sub">' + ex.bench + ' · ' + ex.pulley + '</div></div>'
