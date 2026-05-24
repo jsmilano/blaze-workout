@@ -429,47 +429,89 @@ const CLUSTERS = {
 };
 
 const TEMPLATES = {
-  efficient:{label:'Efficient Strength',  time:'35–45 min',icon:'⚡',clusters:['A1','B1','C4'],coreBlocks:['Anti-rotation hold — 3 × 20s each side','Oblique Crunch — 3 × 10 each side'],finisher:'3 min speed bag or jump rope',warmup:'Jump rope or speed bag',coachNote:'Balanced push/pull, posture work, and hip stability.'},
-  recovery: {label:'Recovery',           time:'20–35 min',icon:'🔄',clusters:['E1','B1'],coreBlocks:['Trunk Rotation — 2 × 10 each side'],finisher:'5 min light rowing or mobility',warmup:'Light rowing 3 min',coachNote:'Low load, high posture focus. Good after a hard run day.'},
-  performance:{label:'Performance Strength',time:'50–60 min',icon:'🏋️',clusters:['A3','B3','C1'],coreBlocks:['Trunk Rotation — 3 × 12 each side','Oblique Crunch — 3 × 12 each side'],finisher:'5 min conditioning — speed bag or jump rope',warmup:'Jump rope 3 min',coachNote:'Full-body strength emphasis. Shoulder integrity + compound lower body.'},
-  posture:  {label:'Posture & Core Reset',time:'20–30 min',icon:'🧘',clusters:['B1','B4'],coreBlocks:['Scapular hold — 3 × 15s','Trunk Rotation — 2 × 10 each side'],finisher:'Ring rows × 3 sets or shoulder mobility',warmup:'Band shoulder warmup',coachNote:'Pure posture reset. Good standalone or as a complement to running days.'},
-  minimal:  {label:'Minimal — 20 min',   time:'15–20 min',icon:'⏱',clusters:['A2'],coreBlocks:['Trunk Rotation — 2 × 10 each side'],finisher:'None',warmup:'Speed bag 2 min',coachNote:'One efficient cluster + core. Done in 20 minutes flat.'},
-  running:  {label:'Running Support',    time:'30–40 min',icon:'🏃',clusters:['C3','B2'],coreBlocks:['Single-leg balance — 3 × 20s each','Anti-rotation trunk — 3 × 15s'],finisher:'Ankle eversion/inversion 2 × 12 each',warmup:'Light jump rope 2 min',coachNote:'Hip stability, glute activation, and posture.'},
+  efficient: {
+    label:'Efficient Strength', time:'35-45 min', icon:'⚡',
+    clusters:['A1','D1','C4'],
+    coreBlocks:['Trunk Rotation — 3 x 12 each side','Anti-rotation hold — 3 x 20s each side'],
+    finisher:'3 min speed bag or jump rope', warmup:'Jump rope 2 min',
+    coachNote:'Row/press superset, rotational core, hip stability. Full-body in 3 efficient clusters.'
+  },
+  recovery: {
+    label:'Recovery', time:'20-35 min', icon:'🔄',
+    clusters:['E3','B3'],
+    coreBlocks:['Trunk Rotation — 2 x 10 each side'],
+    finisher:'Light mobility flow 5 min', warmup:'Light rowing 3 min',
+    coachNote:'Low-back and rear delt recovery, shoulder integrity work. Minimal load, maximum posture benefit.'
+  },
+  performance: {
+    label:'Performance Strength', time:'50-60 min', icon:'🏋️',
+    clusters:['A5','B5','C2'],
+    coreBlocks:['Oblique Crunch — 3 x 12 each side','Anti-rotation hold — 3 x 20s each side'],
+    finisher:'5 min speed bag or jump rope', warmup:'Jump rope 3 min',
+    coachNote:'Arm-focused pull/push, shoulder stability, full lower body quad/hamstring balance.'
+  },
+  posture: {
+    label:'Posture and Core Reset', time:'20-30 min', icon:'🧘',
+    clusters:['B2','D3'],
+    coreBlocks:['Scapular hold — 3 x 15s','Oblique Crunch — 2 x 12 each side'],
+    finisher:'Ring rows x 3 sets or shoulder mobility', warmup:'Band shoulder warmup',
+    coachNote:'Posterior chain posture and anti-rotation. No lower body load — pure trunk and scapular control.'
+  },
+  minimal: {
+    label:'Minimal — 20 min', time:'15-20 min', icon:'⏱',
+    clusters:['A4'],
+    coreBlocks:['Trunk Rotation — 2 x 10 each side'],
+    finisher:'None', warmup:'Speed bag 2 min',
+    coachNote:'Rows and biceps curl superset — one efficient upper-body cluster plus core. Done in 20 minutes.'
+  },
+  running: {
+    label:'Running Support', time:'30-40 min', icon:'🏃',
+    clusters:['C3','B4'],
+    coreBlocks:['Single-leg balance — 3 x 20s each side','Anti-rotation hold — 3 x 15s'],
+    finisher:'Ankle eversion/inversion 2 x 12 each', warmup:'Light jump rope 2 min',
+    coachNote:'Glute stability and kickback for hip drive, scapular control for running posture. Targeted running support.'
+  },
 };
 
-const SYSTEM_PROMPT = `You are Scott's Bowflex Blaze workout coach. His profile:
+const SYSTEM_PROMPT = `You are Scott's Bowflex Blaze workout coach.
 
-IDENTITY: Adaptive athletic generalist. ~25 miles/week running. NOT bodybuilding. Blend strength, posture, anti-rotation core, movement quality, athletic longevity.
+PROFILE: Adaptive athletic generalist. 25 miles/week running. Blend strength, posture, anti-rotation core, movement quality. No floor work, no situps.
 
-AVOID: Floor exercises, situps, excessive setup transitions.
+CLUSTER STRUCTURE: Each cluster = 2 exercises alternating, SAME Bowflex setup, 10 min. Core blocks between clusters.
 
-STRUCTURE: Each session = clusters x 10 min. Each cluster = 2 exercises alternating with SAME Bowflex setup. Core blocks between clusters. Optional finisher.
+=== VARIETY MANDATE — STRICTLY ENFORCED ===
+You must rotate across ALL cluster types. Never repeat the same cluster combination twice in a row.
+Spread usage: each session should feel distinctly different from the last.
 
-VARIETY IS CRITICAL — follow these rules strictly:
-- Rotate across ALL cluster types every session: A (push/pull), B (posture/scapular), C (running/lower), D (rotational), E (recovery)
-- Never default to the same 2-3 clusters. Spread across all 21 available clusters.
-- Strength goal: include at least one B or D cluster alongside A clusters
-- Recovery goal: use E clusters but vary which ones (E1, E2, E3 in rotation)
-- Actively use under-utilized clusters: A4, A5, B3, B5, C2, C5, D2, D3, E2, E3
-- Every 3rd-4th session should emphasize lower body C clusters regardless of stated goal
-- Shoulder integrity (B3: RC Internal + External) should appear every 3-4 sessions
-- Rotational clusters (D1, D2, D3) should appear at least every other session
-- The coachNote must explain which clusters were chosen AND why they provide variety
+CLUSTER ASSIGNMENT RULES BY GOAL:
+- "efficient" (strength): one A cluster + one B or D cluster + one C cluster
+- "recovery": one E cluster + one B cluster (avoid all A and C clusters)
+- "performance": one A cluster + one B cluster + one C cluster (heavier pairs)
+- "posture": two B clusters OR one B + one D cluster (no A or C)
+- "minimal": one A or D cluster only
+- "running": one C cluster + one B cluster (hip/glute + posture)
 
-FULL CLUSTER MENU — rotate broadly:
-A1=Row+Press, A2=RearDelt+Punch, A3=Pulldowns+ShoulderPress, A4=Rows+BicepsCurl, A5=NarrowPulls+Triceps
-B1=ReverseFly+Retraction, B2=ShoulderExt+RearDelt, B3=RCInternal+RCExternal, B4=ReverseFly+ShoulderExt, B5=StiffArm+LateralRaise
-C1=Squat+HipExtension, C2=LegPress+LegCurl, C3=HipAbduction+Kickback, C4=HipExt+HipAbduction, C5=LegPress+HipExt
-D1=TrunkRotation+Punch, D2=TrunkRotation+RearDelt, D3=ObliqueCrunch+TrunkRotation
-E1=Rows+ReverseFly, E2=ShoulderExt+Retraction, E3=LowBack+RearDelt
+CLUSTER ROTATION RULES:
+- Prioritize clusters not recently used
+- Specifically rotate through: A4, A5, B3, B5, C2, C5, D2, D3, E2, E3 — these are chronically underused
+- B3 (shoulder integrity RC work) must appear at least every 4 sessions
+- D clusters (rotational) must appear every 2-3 sessions
+- C clusters (lower body) must appear every 2-3 sessions regardless of goal
+- Never combine B1+B2 or E1+B1 — these share too many exercises
 
-RUNNING INTEGRATION: Heavy/wrecked legs = reduce C clusters, emphasize upper + posture. Fresh legs = include C clusters.
+ALL 21 CLUSTERS AVAILABLE:
+A1=SeatedLatRows+BenchPress, A2=RearDeltRows+ResistedPunch, A3=Pulldowns+ShoulderPress, A4=SeatedLatRows+BicepsCurl, A5=NarrowPulldowns+TricepsPushdown
+B1=ReverseFly+ScapularRetraction, B2=ShoulderExtension+RearDeltRows, B3=RCInternal+RCExternal, B4=ReverseFly+ShoulderExtension, B5=StiffArmPulldown+LateralRaise
+C1=Squat+HipExtension, C2=LegPress+ProneLegCurl, C3=HipAbduction+LegKickback, C4=HipExtension+HipAbduction, C5=LegPress+HipExtension
+D1=TrunkRotation+ResistedPunch, D2=TrunkRotation+RearDeltRows, D3=ObliquecrunchTrunkRotation
+E1=SeatedLatRows+ReverseFly, E2=ShoulderExtension+ScapularRetraction, E3=LowBackExtension+RearDeltRows
 
-CORE BLOCKS: Anti-rotation holds, standing oblique work, trunk rotation. No floor situps.
+RUNNING ADJUSTMENT: Heavy/wrecked legs = no C clusters, sub extra B or D cluster instead.
 
-Respond ONLY with JSON, no extra text:
-{"sessionName":"string","mode":"efficient|recovery|performance|posture|minimal|running","clusters":["A2","D1","C3"],"coreBlocks":["core block 1","core block 2"],"finisher":"string or null","warmup":"string","coachNote":"explain cluster choices and variety rationale"}\`;
+CORE BLOCKS: Anti-rotation holds, standing oblique work, trunk rotation. Never floor crunches.
 
+RESPOND WITH JSON ONLY — no text before or after:
+{"sessionName":"string","mode":"efficient|recovery|performance|posture|minimal|running","clusters":["X1","Y2","Z3"],"coreBlocks":["description 1","description 2"],"finisher":"string or null","warmup":"string","coachNote":"which clusters chosen and why they differ from typical sessions"}`;
 // ── STATE ──
 let ctx = {legs:'fresh', energy:'good', time:'45', goal:'efficient'};
 let currentSession = null;
@@ -548,7 +590,7 @@ function initTemplates() {
       <span class="t-icon">${t.icon}</span>
       <div style="flex:1;min-width:0">
         <div class="t-name">${t.label}</div>
-        <div class="t-desc">${t.time} · ${t.desc||''}</div>
+        <div class="t-desc">${t.time} · ${t.coachNote||''}</div>
       </div>
       <span class="t-arrow">›</span>
     </button>`;
