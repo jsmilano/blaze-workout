@@ -429,12 +429,16 @@ const CLUSTERS = {
 };
 
 const TEMPLATES = {
-  efficient: {label:'Efficient Strength',time:'35-45 min',icon:'[strength]',clusters:['A1','D1','C4'],coreBlocks:['Trunk Rotation - 3 x 12 each side','Anti-rotation hold - 3 x 20s each side'],finisher:'3 min speed bag or jump rope',warmup:'Jump rope 2 min',coachNote:'Row/press, rotational core, hip stability.'},
-  recovery:  {label:'Recovery',time:'20-35 min',icon:'[recovery]',clusters:['E3','B3'],coreBlocks:['Trunk Rotation - 2 x 10 each side'],finisher:'Light mobility 5 min',warmup:'Light rowing 3 min',coachNote:'Low-back recovery and shoulder integrity. Minimal load.'},
-  performance:{label:'Performance Strength',time:'50-60 min',icon:'[performance]',clusters:['A5','B5','C2'],coreBlocks:['Oblique Crunch - 3 x 12 each side','Anti-rotation hold - 3 x 20s each side'],finisher:'5 min speed bag',warmup:'Jump rope 3 min',coachNote:'Arm-focused pull/push, shoulder stability, full lower body.'},
-  posture:   {label:'Posture and Core',time:'20-30 min',icon:'[posture]',clusters:['B2','D3'],coreBlocks:['Scapular hold - 3 x 15s','Oblique Crunch - 2 x 12 each side'],finisher:'Ring rows x 3 or shoulder mobility',warmup:'Band shoulder warmup',coachNote:'Posterior chain and anti-rotation. No lower body load.'},
-  minimal:   {label:'Minimal 20 min',time:'15-20 min',icon:'[minimal]',clusters:['A4'],coreBlocks:['Trunk Rotation - 2 x 10 each side'],finisher:'None',warmup:'Speed bag 2 min',coachNote:'Rows and biceps curl. One cluster plus core in 20 minutes.'},
-  running:   {label:'Running Support',time:'30-40 min',icon:'[running]',clusters:['C3','B4'],coreBlocks:['Single-leg balance - 3 x 20s each','Anti-rotation hold - 3 x 15s'],finisher:'Ankle eversion/inversion 2 x 12',warmup:'Light jump rope 2 min',coachNote:'Glute stability and scapular control for running support.'},
+  efficient:   {label:'Efficient Strength',   time:'35-45 min', color:'#e8421c', icon:'STR', clusters:['A1','D1','C4'],  coreBlocks:['Trunk Rotation - 3 x 12 each side','Anti-rotation hold - 3 x 20s each side'], finisher:'3 min speed bag or jump rope', warmup:'Jump rope 2 min',    coachNote:'Row/press, rotational core, hip stability.'},
+  recovery:    {label:'Recovery',             time:'20-35 min', color:'#2a9d4e', icon:'REC', clusters:['E3','B3'],        coreBlocks:['Trunk Rotation - 2 x 10 each side'],                                            finisher:'Light mobility 5 min',        warmup:'Light rowing 3 min',  coachNote:'Low-back recovery and shoulder integrity. Minimal load.'},
+  performance: {label:'Performance Strength', time:'50-60 min', color:'#d4a017', icon:'PRF', clusters:['A5','B5','C2'],  coreBlocks:['Oblique Crunch - 3 x 12 each side','Anti-rotation hold - 3 x 20s each side'],  finisher:'5 min speed bag',             warmup:'Jump rope 3 min',     coachNote:'Arm-focused pull/push, shoulder stability, full lower body.'},
+  posture:     {label:'Posture and Core',     time:'20-30 min', color:'#2b7fc9', icon:'PST', clusters:['B2','D3'],        coreBlocks:['Scapular hold - 3 x 15s','Oblique Crunch - 2 x 12 each side'],                  finisher:'Ring rows x 3 or shoulder mobility', warmup:'Band shoulder warmup', coachNote:'Posterior chain and anti-rotation. No lower body load.'},
+  minimal:     {label:'Minimal 20 min',       time:'15-20 min', color:'#666',    icon:'MIN', clusters:['A4'],             coreBlocks:['Trunk Rotation - 2 x 10 each side'],                                            finisher:'None',                        warmup:'Speed bag 2 min',     coachNote:'Rows and biceps curl. One cluster plus core in 20 minutes.'},
+  running:     {label:'Running Support',      time:'30-40 min', color:'#c2703d', icon:'RUN', clusters:['C3','B4'],        coreBlocks:['Single-leg balance - 3 x 20s each','Anti-rotation hold - 3 x 15s'],            finisher:'Ankle eversion/inversion 2 x 12', warmup:'Light jump rope 2 min', coachNote:'Glute stability and scapular control for running support.'},
+  upper:       {label:'Upper Body Focus',     time:'35-45 min', color:'#9c3dc2', icon:'UPR', clusters:['A3','B1','D2'],  coreBlocks:['Trunk Rotation - 3 x 10 each side','Anti-rotation hold - 3 x 20s each side'],  finisher:'3 min speed bag',             warmup:'Jump rope 2 min',     coachNote:'Vertical pull/press, pure posture pair, rotational core.'},
+  lower:       {label:'Lower Body Focus',     time:'35-45 min', color:'#c2703d', icon:'LWR', clusters:['C1','C5','B3'],  coreBlocks:['Single-leg balance - 3 x 20s each','Anti-rotation hold - 3 x 15s'],            finisher:'Ankle work 2 x 12 each',      warmup:'Light jump rope 2 min', coachNote:'Squat/hip extension, leg press/hip, shoulder integrity.'},
+  shoulder:    {label:'Shoulder Integrity',   time:'25-35 min', color:'#d4a017', icon:'SHD', clusters:['B3','B5','E2'],  coreBlocks:['Scapular hold - 3 x 15s','Trunk Rotation - 2 x 10 each side'],                  finisher:'Ring rows x 3',               warmup:'Band shoulder warmup', coachNote:'Full rotator cuff, stiff-arm stability, posture recovery.'},
+  athletic:    {label:'Athletic Full Body',   time:'45-55 min', color:'#e8421c', icon:'ATH', clusters:['A2','C3','D1'],  coreBlocks:['Trunk Rotation - 3 x 12 each side','Oblique Crunch - 3 x 10 each side'],        finisher:'5 min speed bag or jump rope', warmup:'Jump rope 3 min',    coachNote:'Athletic punch/row pair, glute stability, rotational power.'},
 };
 
 const SYSTEM_PROMPT = `You are Scott's Bowflex Blaze workout coach.
@@ -535,16 +539,23 @@ function initQuickPrompts() {
 }
 
 function initTemplates() {
-  const el = document.getElementById('template-list');
-  Object.entries(TEMPLATES).forEach(([key, t]) => {
-    el.innerHTML += `<button class="template-btn" onclick="loadTemplate('${key}')">
-      <span class="t-icon">${t.icon}</span>
-      <div style="flex:1;min-width:0">
-        <div class="t-name">${t.label}</div>
-        <div class="t-desc">${t.time} - ${t.coachNote||''}</div>
-      </div>
-      <span class="t-arrow">›</span>
-    </button>`;
+  var el = document.getElementById('template-list');
+  Object.entries(TEMPLATES).forEach(function(entry) {
+    var key = entry[0]; var t = entry[1];
+    var color = t.color || '#e8421c';
+    var btn = document.createElement('button');
+    btn.className = 'template-btn';
+    btn.onclick = function() { loadTemplate(key); };
+    btn.innerHTML =
+      '<div style="width:42px;height:42px;border-radius:6px;background:' + color + '22;border:1px solid ' + color + '55;display:flex;align-items:center;justify-content:center;flex-shrink:0">'
+      + '<span style="font-family:monospace;font-weight:900;font-size:11px;color:' + color + ';letter-spacing:0.05em">' + t.icon + '</span>'
+      + '</div>'
+      + '<div style="flex:1;min-width:0;margin-left:12px">'
+      + '<div class="t-name">' + t.label + '</div>'
+      + '<div class="t-desc">' + t.time + ' - ' + (t.coachNote || '') + '</div>'
+      + '</div>'
+      + '<span class="t-arrow">&#x203a;</span>';
+    el.appendChild(btn);
   });
 }
 
